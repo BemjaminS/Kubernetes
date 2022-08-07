@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: ksweightapp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ksweightapp
+  template:
+    metadata:
+      labels:
+        app: ksweightapp 
+    spec:
+      containers:
+        - name: ksweightapp 
+          image: weightappbenk8s.azurecr.io/ksweightapp
+          ports:
+          - containerPort: 80
