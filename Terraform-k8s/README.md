@@ -1,6 +1,6 @@
 ## InfraCost
 
-![img](https://postimg.cc/vxhdN95C)
+[![Screen-Shot-2022-08-08-at-1-03-57.png](https://i.postimg.cc/4nkNnQy4/Screen-Shot-2022-08-08-at-1-03-57.png)](https://postimg.cc/vxhdN95C)
 
 
 ## Requirements
