@@ -24,3 +24,6 @@ spec:
           image: weightappbenk8s.azurecr.io/ksweightapp
           ports:
           - containerPort: 80
+          envFrom:
+          - secretRef:
+              name: stagesecret
