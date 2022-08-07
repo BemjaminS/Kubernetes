@@ -95,7 +95,7 @@ stages:
   variables:
   - group: prod-var
   displayName: Deploy To Production
-  dependsOn: Build
+  dependsOn: DeployStage
 
   jobs:
   - deployment: Deploy
