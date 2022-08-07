@@ -1,10 +1,10 @@
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-    name: ksweightapp
+  name: ksweightapp
 spec:
-    type: LoadBalancer
-    ports:
-    - port: 80 
-    selector:
-        app: ksweightapp
+  selector:
+    app: ksweightapp
+  ports:
+    - port: 5678 # Default port for image
+      targetPort: 80
