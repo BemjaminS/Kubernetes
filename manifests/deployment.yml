@@ -3,10 +3,17 @@ kind: Deployment
 metadata:
   name: ksweightapp 
 spec:
-  replicas: 1
+  replicas: 2
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: ksweightapp
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
