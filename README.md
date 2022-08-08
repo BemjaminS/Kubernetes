@@ -1,30 +1,78 @@
-# Node.js Weight Tracker
 
-![Demo](docs/build-weight-tracker-app-demo.gif)
+# kubernetes
 
-This sample application demonstrates the following technologies.
+![img](https://buddy.works/guides/covers/optimize-kubernetes-workflow/kubernetes-cover.png)
 
-* [hapi](https://hapi.dev) - a wonderful Node.js application framework
-* [PostgreSQL](https://www.postgresql.org/) - a popular relational database
-* [Postgres](https://github.com/porsager/postgres) - a new PostgreSQL client for Node.js
-* [Vue.js](https://vuejs.org/) - a popular front-end library
-* [Bulma](https://bulma.io/) - a great CSS framework based on Flexbox
-* [EJS](https://ejs.co/) - a great template library for server-side HTML templates
+|                                                                                                                 Build & Push To ACR                                                                                                                 	|                                                                                                                        Deploy STAGING                                                                                                                        	|                                                                                                                        Deploy PRODUCTION                                                                                                                        	|
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:	|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:	|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:	|
+| [![Build Status](https://dev.azure.com/Benswisa1/k8s-WeightApp/_apis/build/status/k8s-WeightApp?branchName=main&stageName=Build%20stage&jobName=Build)](https://dev.azure.com/Benswisa1/k8s-WeightApp/_build/latest?definitionId=7&branchName=main) 	| [![Build Status](https://dev.azure.com/Benswisa1/k8s-WeightApp/_apis/build/status/k8s-WeightApp?branchName=main&stageName=Deploy%20To%20Staging&jobName=Deploy)](https://dev.azure.com/Benswisa1/k8s-WeightApp/_build/latest?definitionId=7&branchName=main) 	| [![Build Status](https://dev.azure.com/Benswisa1/k8s-WeightApp/_apis/build/status/k8s-WeightApp?branchName=main&stageName=Deploy%20To%20Production&jobName=Deploy)](https://dev.azure.com/Benswisa1/k8s-WeightApp/_build/latest?definitionId=7&branchName=main) 	|
 
-**Requirements:**
 
-* [Node.js](https://nodejs.org/) 14.x
-* [PostgreSQL](https://www.postgresql.org/) (can be installed locally using Docker)
-* [Free Okta developer account](https://developer.okta.com/) for account registration, login
 
-## Install and Configuration
 
-1. Clone or download source files
-1. Run `npm install` to install dependencies
-1. If you don't already have PostgreSQL, set up using Docker
-1. Create a [free Okta developer account](https://developer.okta.com/) and add a web application for this app
-1. Copy `.env.sample` to `.env` and change the `OKTA_*` values to your application
-1. Initialize the PostgreSQL database by running `npm run initdb`
-1. Run `npm run dev` to start Node.js
+ this project we deploy the [weight-tracker-app](https://github.com/BemjaminS/bootcamp-app-U) with kubernetes.
+- Using infrastracture as code to Deploy the Environment's (Terraform):
+- using azure kubernetes service (AKS)
+- 2X cluster's for STAGING/PRODUCTION environment
+- Azure container registry (ACR)
+- Azure-devops for CI/CD pipeline:
+  * Using Pipeline library to store the secret
+  * Create image pull secret to kubernetes cluster:
+    ```
+    --from-literal=COOKIE_ENCRYPT_PWD=$(COOKIE_ENCRYPT_PWD)
+    --from-literal=HOST=$(HOST)
+    --from-literal=PORT=$(PORT)
+    --from-literal=NODE_ENV=$(NODE_ENV)
+    --from-literal=HOST_URL=$(HOST_URL)
+    --from-literal=OKTA_CLIENT_ID=$(OKTA_CLIENT_ID)
+    --from-literal=OKTA_CLIENT_SECRET=$(OKTA_CLIENT_SECRET)
+    --from-literal=OKTA_ORG_URL=$(OKTA_ORG_URL)
+    --from-literal=PGHOST=$(PGHOST)
+    --from-literal=PGUSERNAME=$(PGUSERNAME)
+    --from-literal=PGDATABASE=$(PGDATABASE)
+    --from-literal=PGPASSWORD=$(PGPASSWORD)
+    --from-literal=PGPORT=$(PGPORT)
+     ```
+  * deploy manifests:
+    ```
+    $(Pipeline.Workspace)/manifests/deployment.yml
+    $(Pipeline.Workspace)/manifests/service.yml
+    $(Pipeline.Workspace)/manifests/ingress.yml
+    ```
+- using [helm](https://artifacthub.io/packages/helm/bitnami/postgresql) to create PostgresSql DB
+  **```helm repo add bitnami https://charts.bitnami.com/bitnami```**
+  **```helm install <my-release> bitnami/postgresql```**
 
-The associated blog post goes into more detail on how to set up PostgreSQL with Docker and how to configure your Okta account.
+
+
+##  Dockerfile: 
+- using Node:14-alpine
+- Create an app folder that contains the app files
+- App installation and dependencies
+- Expose the app to port 80 
+- ENTRYPOINT npm run initdb && npm run dev
+
+
+
+## NodeWeightTracker application on AKS meeting the following requirements:
+- The NodeWeightTracker application is accessible from the internet
+- The NodeWeightTracker application is exposed to the internet on port 80
+- The NodeWeightTracker must have at least 3 instances to ensure high availability
+- Use configmaps/secrets to store your application configurations
+- application expose using Ingress-controller
+
+## CI/CD:
+[![Screen-Shot-2022-08-08-at-13-47-21.png](https://i.postimg.cc/3JdnFXwJ/Screen-Shot-2022-08-08-at-13-47-21.png)](https://postimg.cc/xcVv0bHW)
+
+## Project structure:
+![image](https://bootcamp.rhinops.io/images/kubernetes-resources.png)
+
+## pipeline structure:
+![sela-Bootcamp](https://bootcamp.rhinops.io/images/k8s-cicd.png)
+
+## RESULT:
+![app running](https://camo.githubusercontent.com/e6958692307c27d2b2ede570a12d5034449ae56f788a5dcbeab48ab367f98e4c/68747470733a2f2f692e706f7374696d672e63632f514330546e304c442f74656e6f722e676966)
+
+
+
+
